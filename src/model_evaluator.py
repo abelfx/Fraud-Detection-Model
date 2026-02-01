@@ -121,6 +121,216 @@ class ModelEvaluator:
         
         return optimal_threshold, metrics
     
+    def generate_classification_report(
+        self,
+        y_true: pd.Series,
+        y_pred: np.ndarray,
+        target_names: Optional[list] = None
+    ) -> str:
+        """
+        Generate detailed classification report.
+        """
+        if target_names is None:
+            target_names = ['Normal', 'Fraud']
+        
+        report = classification_report(
+            y_true, y_pred,
+            target_names=target_names,
+            digits=4
+        )
+        
+        logger.info(f"\nClassification Report:\n{report}")
+        
+        return report
+    
+    def plot_confusion_matrix(
+        self,
+        y_true: pd.Series,
+        y_pred: np.ndarray,
+        save_path: Optional[str] = None,
+        normalize: bool = False
+    ):
+        """
+        Plot confusion matrix.
+        """
+        cm = confusion_matrix(y_true, y_pred)
+        
+        if normalize:
+            cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(
+            cm,
+            annot=True,
+            fmt='.2f' if normalize else 'd',
+            cmap='Blues',
+            xticklabels=['Normal', 'Fraud'],
+            yticklabels=['Normal', 'Fraud']
+        )
+        plt.title('Confusion Matrix')
+        plt.ylabel('True Label')
+        plt.xlabel('Predicted Label')
+        
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            logger.info(f"Confusion matrix saved to {save_path}")
+        else:
+            plt.show()
+        
+        plt.close()
+    
+    def plot_roc_curve(
+        self,
+        y_true: pd.Series,
+        y_pred_proba: np.ndarray,
+        save_path: Optional[str] = None
+    ):
+        """
+        Plot ROC curve.
+        """
+        fpr, tpr, thresholds = roc_curve(y_true, y_pred_proba[:, 1])
+        auc_score = roc_auc_score(y_true, y_pred_proba[:, 1])
+        
+        plt.figure(figsize=(8, 6))
+        plt.plot(fpr, tpr, label=f'ROC Curve (AUC = {auc_score:.4f})', linewidth=2)
+        plt.plot([0, 1], [0, 1], 'k--', label='Random Classifier')
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('ROC Curve')
+        plt.legend()
+        plt.grid(alpha=0.3)
+        
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            logger.info(f"ROC curve saved to {save_path}")
+        else:
+            plt.show()
+        
+        plt.close()
+    
+    def plot_roc_and_pr_curves(
+        self,
+        y_true: pd.Series,
+        y_pred_proba: np.ndarray,
+        save_path: Optional[str] = None
+    ):
+        """
+        Plot both ROC and Precision-Recall curves side by side.
+        Emphasizes AUPRC as the primary metric for imbalanced data.
+        """
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+        
+        # ROC Curve
+        fpr, tpr, _ = roc_curve(y_true, y_pred_proba[:, 1])
+        roc_auc = roc_auc_score(y_true, y_pred_proba[:, 1])
+        
+        ax1.plot(fpr, tpr, label=f'ROC Curve (AUC = {roc_auc:.4f})', linewidth=2, color='blue')
+        ax1.plot([0, 1], [0, 1], 'k--', label='Random Classifier')
+        ax1.set_xlabel('False Positive Rate', fontsize=11)
+        ax1.set_ylabel('True Positive Rate', fontsize=11)
+        ax1.set_title('ROC Curve', fontsize=13, fontweight='bold')
+        ax1.legend(fontsize=10)
+        ax1.grid(alpha=0.3)
+        
+        # Precision-Recall Curve
+        precision, recall, thresholds = precision_recall_curve(y_true, y_pred_proba[:, 1])
+        ap_score = average_precision_score(y_true, y_pred_proba[:, 1])
+        baseline = y_true.sum() / len(y_true)
+        
+        ax2.plot(recall, precision, label=f'PR Curve (AUPRC = {ap_score:.4f})', linewidth=2, color='red')
+        ax2.axhline(y=baseline, color='k', linestyle='--', label=f'Baseline (Random) = {baseline:.4f}')
+        ax2.set_xlabel('Recall', fontsize=11)
+        ax2.set_ylabel('Precision', fontsize=11)
+        ax2.set_title('Precision-Recall Curve\\n*** PRIMARY METRIC for Imbalanced Data ***', 
+                      fontsize=13, fontweight='bold')
+        ax2.legend(fontsize=10)
+        ax2.grid(alpha=0.3)
+        
+        plt.tight_layout()
+        
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            logger.info(f"ROC and PR curves saved to {save_path}")
+        else:
+            plt.show()
+        
+        plt.close()
+    
+    def plot_precision_recall_curve(
+        self,
+        y_true: pd.Series,
+        y_pred_proba: np.ndarray,
+        save_path: Optional[str] = None
+    ):
+        """
+        Plot Precision-Recall curve.
+        """
+        precision, recall, thresholds = precision_recall_curve(
+            y_true, y_pred_proba[:, 1]
+        )
+        ap_score = average_precision_score(y_true, y_pred_proba[:, 1])
+        
+        plt.figure(figsize=(8, 6))
+        plt.plot(recall, precision, label=f'PR Curve (AP = {ap_score:.4f})', linewidth=2)
+        plt.xlabel('Recall')
+        plt.ylabel('Precision')
+        plt.title('Precision-Recall Curve')
+        plt.legend()
+        plt.grid(alpha=0.3)
+        
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            logger.info(f"Precision-Recall curve saved to {save_path}")
+        else:
+            plt.show()
+        
+        plt.close()
+    
+    def compare_models(
+        self,
+        results: Dict[str, Dict[str, float]],
+        save_path: Optional[str] = None
+    ):
+        """
+        Create comparison plot for multiple models.
+        """
+        metrics_to_compare = ['accuracy', 'precision', 'recall', 'f1_score', 'roc_auc']
+        
+        # Prepare data for plotting
+        model_names = list(results.keys())
+        metrics_data = {
+            metric: [results[model].get(metric, 0) for model in model_names]
+            for metric in metrics_to_compare
+        }
+        
+        # Create subplot for each metric
+        fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+        axes = axes.flatten()
+        
+        for idx, metric in enumerate(metrics_to_compare):
+            ax = axes[idx]
+            ax.bar(model_names, metrics_data[metric])
+            ax.set_title(f'{metric.replace("_", " ").title()}')
+            ax.set_ylim([0, 1])
+            ax.tick_params(axis='x', rotation=45)
+            
+            # Add value labels on bars
+            for i, v in enumerate(metrics_data[metric]):
+                ax.text(i, v + 0.02, f'{v:.3f}', ha='center', va='bottom')
+        
+        # Hide unused subplot
+        axes[-1].axis('off')
+        
+        plt.tight_layout()
+        
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            logger.info(f"Model comparison saved to {save_path}")
+        else:
+            plt.show()
+        
+        plt.close()
+
 
 def evaluate_model(
     model_trainer,

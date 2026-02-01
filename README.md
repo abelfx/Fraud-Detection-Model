@@ -90,7 +90,7 @@ uvicorn api:app --reload
 
 Access the API documentation at `http://localhost:8000/docs`.
 
-### Dashboard
+### Dashboard -- RECOMMENDED or you can use the pipeline notebooks
 Launch the Streamlit dashboard for interactive analysis:
 
 ```bash
@@ -116,9 +116,10 @@ streamlit run dashboard.py
 - Extracting Global Importance to identify overall fraud drivers.
 - Generating SHAP Force Plots for individual transaction verification (True Positives vs. False Positives).
 
-## Data sets are
-[Fraud_Data.csv](https://drive.google.com/file/d/115VJ-WTPYeP9Wi_llBxUcygZhbPUE01F/view)
-[IpAddress_to_Country.csv](https://drive.google.com/file/d/1mLyLNs6VTGOltT5zUfFInXw6VDLR-MmQ/view)
-[creditcard.csv](https://drive.google.com/file/d/1UvXXxXtmFFRDU4WI6VjnDoALO1bFfC0P/view)
+## Data sets: Add these inside your Data/raw folder before starting your training
+- [Fraud_Data.csv](https://drive.google.com/file/d/115VJ-WTPYeP9Wi_llBxUcygZhbPUE01F/view)
+- [IpAddress_to_Country.csv](https://drive.google.com/file/d/1mLyLNs6VTGOltT5zUfFInXw6VDLR-MmQ/view)
+- [creditcard.csv](https://drive.google.com/file/d/1UvXXxXtmFFRDU4WI6VjnDoALO1bFfC0P/view)
+
 
 

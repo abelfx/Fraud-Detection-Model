@@ -100,7 +100,6 @@ def train(dataset, models, no_smote):
     """Train fraud detection models."""
     click.echo(f"Training models on {dataset} dataset(s)...")
     
-    # Determine models to train
     if models == 'all':
         model_types = model_config.model_types
     else:

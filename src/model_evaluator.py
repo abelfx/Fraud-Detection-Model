@@ -255,6 +255,42 @@ class ModelEvaluator:
             plt.show()
         
         plt.close()
+    
+    def plot_precision_recall_curve(
+        self,
+        y_true: pd.Series,
+        y_pred_proba: np.ndarray,
+        save_path: Optional[str] = None
+    ):
+        """
+        Plot Precision-Recall curve.
+        """
+        precision, recall, thresholds = precision_recall_curve(
+            y_true, y_pred_proba[:, 1]
+        )
+        ap_score = average_precision_score(y_true, y_pred_proba[:, 1])
+        
+        plt.figure(figsize=(8, 6))
+        plt.plot(recall, precision, label=f'PR Curve (AP = {ap_score:.4f})', linewidth=2)
+        plt.xlabel('Recall')
+        plt.ylabel('Precision')
+        plt.title('Precision-Recall Curve')
+        plt.legend()
+        plt.grid(alpha=0.3)
+        
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            logger.info(f"Precision-Recall curve saved to {save_path}")
+        else:
+            plt.show()
+        
+        plt.close()
+    
+    def compare_models(
+        self,
+        results: Dict[str, Dict[str, float]],
+        save_path: Optional[str] = None
+    ):
         """
         Create comparison plot for multiple models.
         """

@@ -1,8 +1,7 @@
 # Fraud Detection for E-Commerce and Banking
-### *Advanced Machine Learning Solutions for Adey Innovations Inc.*
 
 ## Project Overview
-As a Data Scientist at **Adey Innovations Inc.**, We are developing a robust fraud detection system for two distinct domains: **E-commerce transactions** and **Bank credit transactions**. 
+We are developing a robust fraud detection system for two distinct domains: **E-commerce transactions** and **Bank credit transactions**. 
 
 Fraud detection is a high-stakes challenge involving a delicate trade-off between **Security** (detecting fraud) and **User Experience** (minimizing false positives). This project leverages geolocation analysis, transaction patterns, and advanced ensemble models to protect financial assets and build institutional trust.
 
@@ -116,4 +115,10 @@ streamlit run dashboard.py
 ## Task 3: Model Explainability (XAI)
 - Extracting Global Importance to identify overall fraud drivers.
 - Generating SHAP Force Plots for individual transaction verification (True Positives vs. False Positives).
+
+## Data sets are
+[Fraud_Data.csv](https://drive.google.com/file/d/115VJ-WTPYeP9Wi_llBxUcygZhbPUE01F/view)
+[IpAddress_to_Country.csv](https://drive.google.com/file/d/1mLyLNs6VTGOltT5zUfFInXw6VDLR-MmQ/view)
+[creditcard.csv](https://drive.google.com/file/d/1UvXXxXtmFFRDU4WI6VjnDoALO1bFfC0P/view)
+
 

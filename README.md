@@ -1,14 +1,14 @@
-# 🛡️ Fraud Detection for E-Commerce and Banking
+# Fraud Detection for E-Commerce and Banking
 ### *Advanced Machine Learning Solutions for Adey Innovations Inc.*
 
-## 📌 Project Overview
+## Project Overview
 As a Data Scientist at **Adey Innovations Inc.**, We are developing a robust fraud detection system for two distinct domains: **E-commerce transactions** and **Bank credit transactions**. 
 
 Fraud detection is a high-stakes challenge involving a delicate trade-off between **Security** (detecting fraud) and **User Experience** (minimizing false positives). This project leverages geolocation analysis, transaction patterns, and advanced ensemble models to protect financial assets and build institutional trust.
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 The repository is organized following industry best practices for data science workflows:
 
 ```
@@ -41,12 +41,12 @@ fraud-detection/
     └── test_preprocessor.py
 ```
 
-## 🛠️ Key Technical Challenges
+## Key Technical Challenges
 - Class Imbalance: Fraud cases make up < 1% of the data. We utilize SMOTE (Synthetic Minority Over-sampling Technique) to ensure the model learns fraud patterns effectively.
 - Geolocation Mapping: Merging billion-row IP ranges with transaction logs using range-based lookups (merge_asof) for country-level insights.
 - Explainability: Using SHAP (SHapley Additive exPlanations) to move beyond "black-box" models and provide actionable business recommendations.
 
-## 🚀 Installation & Setup
+## Installation & Setup
 1. Clone the Repository:
 ```
 git clone https://github.com/abelfx/Fraud-Detection-Model
@@ -63,7 +63,7 @@ pip install -r requirements.txt
 3. Data Preparation:
 Place raw data files (e.g., Fraud_Data.csv, IpAddress_to_Country.csv, creditcard.csv) in an appropriate location as configured in `src/config.py`.
 
-## 📊 Usage
+## Usage
 
 ### CLI (Command Line Interface)
 Use `main.py` for training, preprocessing, evaluation, and prediction:
@@ -98,7 +98,7 @@ Launch the Streamlit dashboard for interactive analysis:
 streamlit run dashboard.py
 ```
 
-## 📈 Pipeline Stages
+## Pipeline Stages
 ## Task 1: Data Analysis & Preprocessing
 - IP Mapping: Converted IP addresses to integers to perform range-based country lookups.
 
@@ -117,6 +117,3 @@ streamlit run dashboard.py
 - Extracting Global Importance to identify overall fraud drivers.
 - Generating SHAP Force Plots for individual transaction verification (True Positives vs. False Positives).
 
-## 🤝 Acknowledgements
-- Company: Adey Innovations Inc.
-- Tutors: Kerod, Mahbubah, Filimon, Smegnsh.

@@ -15,14 +15,13 @@ from src.config import api_config, model_config
 
 logger = setup_logger(__name__, "api.log")
 
-# Initialize FastAPI app
 app = FastAPI(
     title=api_config.title,
     description=api_config.description,
     version=api_config.version
 )
 
-# Add CORS middleware
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -44,7 +43,6 @@ class FraudTransaction(BaseModel):
     hour_of_day: Optional[int] = Field(None, ge=0, lt=24)
     day_of_week: Optional[int] = Field(None, ge=0, lt=7)
     time_since_signup_hours: Optional[float] = Field(None, ge=0)
-    # Add other features as needed
     
     class Config:
         schema_extra = {
@@ -101,7 +99,6 @@ class CreditCardTransaction(BaseModel):
                 "V1": -1.3598071336738,
                 "V2": -0.0727811733098497,
                 "V3": 2.53634673796914,
-                # ... other V features
             }
         }
 
@@ -206,11 +203,7 @@ async def predict_fraud_single(
     """
     try:
         predictor = get_predictor(model_type, "fraud")
-        
-        # Convert to dict
         transaction_dict = transaction.dict()
-        
-        # Make prediction
         result = predictor.predict_single(transaction_dict, threshold=threshold)
         
         return PredictionResponse(
@@ -284,8 +277,6 @@ async def predict_fraud_batch(
     """
     try:
         predictor = get_predictor(model_type, "fraud")
-        
-        # Convert to DataFrame
         df = pd.DataFrame(request.transactions)
         
         # Make predictions
@@ -295,7 +286,6 @@ async def predict_fraud_batch(
             include_details=request.include_details
         )
         
-        # Format response
         predictions = []
         for idx, row in results.iterrows():
             predictions.append(PredictionResponse(
